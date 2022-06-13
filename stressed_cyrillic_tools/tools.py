@@ -91,5 +91,5 @@ def remove_apostrophes(word: str) -> str:
     return word.replace("'", "")
 
 def remove_yo(word: str) -> str:
-    """This replaces ё with the letter е (also upper case"""
+    """This replaces ё with the letter е (also works for upper case)"""
     return word.replace("ё", "е").replace("Ё", "Е")
