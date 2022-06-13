@@ -93,3 +93,7 @@ def remove_apostrophes(word: str) -> str:
 def remove_yo(word: str) -> str:
     """This replaces ё with the letter е (also works for upper case)"""
     return word.replace("ё", "е").replace("Ё", "Е")
+
+def get_lower_and_without_yo(word: str) -> str:
+    """Returns the lower case version of the word and the version without yo"""
+    return remove_yo(unaccentify(word)).lower()
