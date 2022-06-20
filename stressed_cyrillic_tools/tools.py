@@ -2,16 +2,16 @@ import re
 import unicodedata
 
 def is_accented(word: str):
-    """Returns True if the word has an accent (also detects if the word has a grave accent"""
+    """Returns True if the word has an accent (also detects if the word has a grave accent."""
     return unaccentify(word) != word
 
 def is_acute_accented(phrase: str):
-    """Returns True if the phrase has an acute accent"""
+    """Returns True if the phrase has an acute accent."""
     return '\u0301' in phrase
 
 def has_only_one_syllable(word: str):
     """Returns True if the word has only one syllable ( == at most one vowel)
-    Accepts only one word without spaces"""
+    Accepts only one word without spaces."""
     assert " " not in word
 
     word_lower = word.lower()
@@ -78,22 +78,40 @@ def remove_accent_if_only_one_syllable(s: str):
         return s
 
 def has_cyrillic_letters(s: str):
-    """Returns True if the string has at least one Cyrillic letter"""
+    """Returns True if the string has at least one Cyrillic letter."""
     m = re.findall(r'[А-я]+', s)
     return m != []
 
 def convert_ap_accent_to_real(word: str) -> str:
-    """This replaces the accents marked with apostrophes with a real acute accent"""
+    """This replaces the accents marked with apostrophes with a real acute accent."""
     return word.replace("'", "\u0301")
 
 def remove_apostrophes(word: str) -> str:
-    """Removes apostrophes from words like удар'ения"""
+    """Removes apostrophes from words like удар'ения."""
     return word.replace("'", "")
 
 def remove_yo(word: str) -> str:
-    """This replaces ё with the letter е (also works for upper case)"""
+    """This replaces ё with the letter е (also works for upper case)."""
     return word.replace("ё", "е").replace("Ё", "Е")
 
 def get_lower_and_without_yo(word: str) -> str:
-    """Returns the lower case version of the word and the version without yo"""
+    """Returns the lower case version of the word and the version without yo."""
     return remove_yo(unaccentify(word)).lower()
+
+def has_two_accent_stress_marks(word: str) -> bool:
+    """Returns True if the word has at least two accent marks."""
+    return word.count("\u0301") >= 2
+
+def is_unhelpfully_unstressed(word: str) -> bool:
+    """Returns True if the word would be of no use in a stress dictionary."""
+
+    if " " in word:
+        # Return True if all of the words in the phrase are unhelpfully unstressed
+        return all(is_unhelpfully_unstressed(word) for word in word.split(" "))
+
+    if "ё" in word or "Ё" in word:
+        return False
+    if ("е" in word or "Е" in word) and has_only_one_syllable(word):
+        # The word лес tells us that it is not written like "лёс"
+        return False
+    return not is_accented(word)
