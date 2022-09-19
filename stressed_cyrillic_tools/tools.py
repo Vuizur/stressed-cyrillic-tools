@@ -117,8 +117,10 @@ def has_two_stress_marks(word: str) -> bool:
 
     if " " in word:
         return any(has_two_stress_marks(word) for word in word.split(" "))
+    if "-" in word:
+        return any(has_two_stress_marks(word) for word in word.split("-"))
 
-    # Reduce accent marks as much as possible
+    # Bake in accent marks as much as possible, in theory this prevents editing of integral stress marks
     word = unicodedata.normalize("NFKC", word)
 
     num_combining_accent_marks = word.count("\u0301") + word.count("\u0300")
@@ -137,6 +139,47 @@ def has_two_stress_marks(word: str) -> bool:
                 num_differences += 1
         return num_combining_accent_marks + num_differences >= 2
 
+def fix_two_accent_marks(word: str) -> str:
+    """Fixes words with two accent marks (acute and grave) by removing the grave accent. 
+    If the word has multiple acute accents, it keeps the first one.
+    Also works for complete texts (splits by space)."""
+
+    if not has_two_stress_marks(word):
+        return word
+
+    if " " in word:
+        words = word.split(" ")
+        fixed_words = []
+        for word in words:
+            fixed_words.append(fix_two_accent_marks(word))
+        return " ".join(fixed_words)
+
+    if "-" in word:
+        words = word.split("-")
+        fixed_words = []
+        for word in words:
+            fixed_words.append(fix_two_accent_marks(word))
+        return "-".join(fixed_words)
+    # TODO: This breaks if the word has a dash and a space
+
+    # Decompose everything
+    word = unicodedata.normalize("NFKD", word)
+
+    # Count the number of acute accents
+    num_acute_accents = word.count("\u0301")
+
+    if num_acute_accents == 1:
+        # If there is only one acute accent, remove all grave accents
+        return word.replace("\u0300", "")
+    elif num_acute_accents == 0:
+        word = word.split("\u0300")[0] +  "\u0300" + "".join(word.split("\u0300")[1:])
+        print("Potentially malformed word: ", word)
+        return word
+    else:
+        # Keep the first acute accent and remove the rest
+        word = word.split("\u0301")[0] +  "\u0301" + "".join(word.split("\u0301")[1:])
+        return word.replace("\u0300", "")
+    
 
 def is_unhelpfully_unstressed(word: str) -> bool:
     """Returns True if the word would be of no use in a stress dictionary."""
