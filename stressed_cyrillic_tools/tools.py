@@ -139,8 +139,9 @@ def has_two_stress_marks(word: str) -> bool:
                 num_differences += 1
         return num_combining_accent_marks + num_differences >= 2
 
+
 def fix_two_accent_marks(word: str) -> str:
-    """Fixes words with two accent marks (acute and grave) by removing the grave accent. 
+    """Fixes words with two accent marks (acute and grave) by removing the grave accent.
     If the word has multiple acute accents, it keeps the first one.
     Also works for complete texts (splits by space)."""
 
@@ -172,14 +173,14 @@ def fix_two_accent_marks(word: str) -> str:
         # If there is only one acute accent, remove all grave accents
         return word.replace("\u0300", "")
     elif num_acute_accents == 0:
-        word = word.split("\u0300")[0] +  "\u0300" + "".join(word.split("\u0300")[1:])
+        word = word.split("\u0300")[0] + "\u0300" + "".join(word.split("\u0300")[1:])
         print("Potentially malformed word: ", word)
         return word
     else:
         # Keep the first acute accent and remove the rest
-        word = word.split("\u0301")[0] +  "\u0301" + "".join(word.split("\u0301")[1:])
+        word = word.split("\u0301")[0] + "\u0301" + "".join(word.split("\u0301")[1:])
         return word.replace("\u0300", "")
-    
+
 
 def is_unhelpfully_unstressed(word: str) -> bool:
     """Returns True if the word would be of no use in a stress dictionary."""
