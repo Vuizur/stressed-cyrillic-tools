@@ -111,9 +111,32 @@ def get_lower_and_without_yo(word: str) -> str:
     return remove_yo(unaccentify(word)).lower()
 
 
-def has_two_accent_stress_marks(word: str) -> bool:
-    """Returns True if the word has at least two accent marks."""
-    return word.count("\u0301") >= 2
+def has_two_stress_marks(word: str) -> bool:
+    """Returns True if the word has at least two accent marks.
+    For strings with spaces, returns True if at least one word has at least two accent marks."""
+    
+    if " " in word:
+        return any(has_two_stress_marks(word) for word in word.split(" "))
+
+    # Reduce accent marks as much as possible
+    word = unicodedata.normalize("NFKC", word)
+    
+    num_combining_accent_marks = word.count("\u0301")
+    word_with_only_baked_in_accents = word.replace("\u0301", "")
+    if num_combining_accent_marks >= 2:
+        return True
+    else:
+        # This handles also the grave accents
+        unaccented = unaccentify(word_with_only_baked_in_accents)
+        # Assert that the word and the unaccented version have the same length, otherwise we have a bug
+        assert len(word_with_only_baked_in_accents) == len(unaccented)
+        # Calculate how many characters differ by iterating over the word
+        num_differences = 0
+        for char1, char2 in zip(word_with_only_baked_in_accents, unaccented):
+            if char1 != char2:
+                num_differences += 1
+        return num_combining_accent_marks + num_differences >= 2
+    
 
 
 def is_unhelpfully_unstressed(word: str) -> bool:

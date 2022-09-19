@@ -1,3 +1,5 @@
 .pypirc
 poetry.lock
 dist/
+stressed_cyrillic_tools/__pycache__/
+tests/__pycache__/
