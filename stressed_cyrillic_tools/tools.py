@@ -114,15 +114,15 @@ def get_lower_and_without_yo(word: str) -> str:
 def has_two_stress_marks(word: str) -> bool:
     """Returns True if the word has at least two accent marks.
     For strings with spaces, returns True if at least one word has at least two accent marks."""
-    
+
     if " " in word:
         return any(has_two_stress_marks(word) for word in word.split(" "))
 
     # Reduce accent marks as much as possible
     word = unicodedata.normalize("NFKC", word)
-    
-    num_combining_accent_marks = word.count("\u0301")
-    word_with_only_baked_in_accents = word.replace("\u0301", "")
+
+    num_combining_accent_marks = word.count("\u0301") + word.count("\u0300")
+    word_with_only_baked_in_accents = word.replace("\u0301", "").replace("\u0300", "")
     if num_combining_accent_marks >= 2:
         return True
     else:
@@ -136,7 +136,6 @@ def has_two_stress_marks(word: str) -> bool:
             if char1 != char2:
                 num_differences += 1
         return num_combining_accent_marks + num_differences >= 2
-    
 
 
 def is_unhelpfully_unstressed(word: str) -> bool:
@@ -156,3 +155,6 @@ def is_unhelpfully_unstressed(word: str) -> bool:
             # Words with only one syllable are never marked with an accent
             return True
     return not is_accented(word)
+
+
+print(has_two_stress_marks("зу̀б"))

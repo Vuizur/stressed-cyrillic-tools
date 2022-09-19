@@ -16,3 +16,9 @@ def test_is_lower_and_without_yo():
 def test_has_two_stress_marks():
     assert has_two_stress_marks("склоне́ние") == False
     assert has_two_stress_marks("склоне́ние́") == True
+    # Here no baked in version for the grave accent exists
+    assert has_two_stress_marks("зу̀бофрезерова́ние") == True
+    assert has_two_stress_marks("зу̀б") == False
+    # Here a baked in version exists
+    assert has_two_stress_marks("мѐгане́кко") == True
+    assert has_two_stress_marks("мѐг") == False
