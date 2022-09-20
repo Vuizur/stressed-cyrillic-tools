@@ -173,9 +173,12 @@ def fix_two_accent_marks(word: str) -> str:
         # If there is only one acute accent, remove all grave accents
         return word.replace("\u0300", "")
     elif num_acute_accents == 0:
-        word = word.split("\u0300")[0] + "\u0300" + "".join(word.split("\u0300")[1:])
-        print("Potentially malformed word: ", word)
-        return word
+        #word = word.split("\u0300")[0] + "\u0300" + "".join(word.split("\u0300")[1:])
+        #print("Potentially malformed word: ", word)
+        # This is usually caused by it being a part of a word with a dash
+        return word.replace("\u0300", "")
+
+        #return word
     else:
         # Keep the first acute accent and remove the rest
         word = word.split("\u0301")[0] + "\u0301" + "".join(word.split("\u0301")[1:])
