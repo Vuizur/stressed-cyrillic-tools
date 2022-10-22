@@ -107,7 +107,7 @@ def remove_yo(word: str) -> str:
 
 
 def get_lower_and_without_yo(word: str) -> str:
-    """Returns the lower case version of the word and the version without yo."""
+    """Returns the lower case, unaccentified version of the word without yo."""
     return remove_yo(unaccentify(word)).lower()
 
 
