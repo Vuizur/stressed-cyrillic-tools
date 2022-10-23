@@ -186,7 +186,8 @@ def fix_two_accent_marks(word: str) -> str:
 
 
 def is_unhelpfully_unstressed(word: str) -> bool:
-    """Returns True if the word would be of no use in a stress dictionary."""
+    """Returns True if the word would be of no use in a stress dictionary. This filters out mostly unstressed words,
+    but also words with one syllable where the stress is clear"""
 
     if " " in word:
         # Return True if all of the words in the phrase are unhelpfully unstressed
