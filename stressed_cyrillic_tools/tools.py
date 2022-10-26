@@ -184,6 +184,7 @@ def fix_two_accent_marks(word: str) -> str:
         word = word.split("\u0301")[0] + "\u0301" + "".join(word.split("\u0301")[1:])
         return word.replace("\u0300", "")
 
+WORDS_WITHOUT_STRESS = ["обо"]
 
 def is_unhelpfully_unstressed(word: str) -> bool:
     """Returns True if the word would be of no use in a stress dictionary. This filters out mostly unstressed words,
@@ -192,6 +193,10 @@ def is_unhelpfully_unstressed(word: str) -> bool:
     if " " in word:
         # Return True if all of the words in the phrase are unhelpfully unstressed
         return all(is_unhelpfully_unstressed(word) for word in word.split(" "))
+
+    # Check if word is in the list of words without stress
+    if word.lower() in WORDS_WITHOUT_STRESS:
+        return False
 
     if "ё" in word or "Ё" in word:
         return False
@@ -203,6 +208,3 @@ def is_unhelpfully_unstressed(word: str) -> bool:
             # Words with only one syllable are never marked with an accent
             return True
     return not is_accented(word)
-
-
-print(has_two_stress_marks("зу̀б"))
