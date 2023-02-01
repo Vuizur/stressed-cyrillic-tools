@@ -2,10 +2,10 @@
 authors = ["Vuizur <Vuizur@users.noreply.github.com>"]
 description = ""
 name = "stressed-cyrillic-tools"
-version = "0.1.9"
+version = "0.1.10"
 
 [tool.poetry.dependencies]
-python = "^3.8"
+python = "^3.6"
 
 [tool.poetry.group.dev.dependencies]
 mypy = "^0.971"
