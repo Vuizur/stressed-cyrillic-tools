@@ -15,6 +15,8 @@ def is_acute_accented(phrase: str):
 def has_only_one_syllable(word: str):
     """Returns True if the word has only one syllable ( == at most one vowel)
     Accepts only one word without spaces."""
+    if word == " ":
+        return True # No idea when this happens, but it does
     assert " " not in word
 
     word_lower = word.lower()
@@ -70,9 +72,11 @@ def unaccentify(s):
 
 def remove_accent_if_only_one_syllable(s: str):
     """Removes the accent from words like что́, which are usually not set in texts.
-    Also works with complete texts (splits by space)"""
+    Also works with complete texts (splits by space)
+    Warning: replaces no-breaking spaces with normal spaces."""
     if " " in s:
-        words = s.split(" ")
+        words = s.replace("\xa0", " ").split(" ")
+
         fixed_words = []
         for word in words:
             fixed_words.append(remove_accent_if_only_one_syllable(word))
