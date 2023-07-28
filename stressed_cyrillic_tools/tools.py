@@ -17,7 +17,8 @@ def has_only_one_syllable(word: str):
     Accepts only one word without spaces."""
     if word == " ":
         return True # No idea when this happens, but it does
-    assert " " not in word
+    if " " in word:
+        print(f"Warning: has_only_one_syllable() was called with {word}, containing spaces. ")
 
     word_lower = word.lower()
     vowels = 0
