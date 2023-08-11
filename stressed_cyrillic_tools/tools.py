@@ -1,4 +1,5 @@
 import re
+from typing import List
 import unicodedata
 
 
@@ -36,7 +37,7 @@ def has_acute_accent_or_only_one_syllable(word: str):
 
 # Unaccentifier written by Roman Susi
 # Taken from https://stackoverflow.com/questions/35942129/remove-accent-marks-from-characters-while-preserving-other-diacritics
-ACCENT_MAPPING = {
+ACCENT_MAPPING_BASE = {
     "́": "",
     "̀": "",
     "а́": "а",
@@ -60,11 +61,11 @@ ACCENT_MAPPING = {
 }
 
 ACCENT_MAPPING = {
-    unicodedata.normalize("NFKC", i): j for i, j in ACCENT_MAPPING.items()
+    unicodedata.normalize("NFKC", i): j for i, j in ACCENT_MAPPING_BASE.items()
 }
 
 
-def unaccentify(s):
+def unaccentify(s: str):
     source = unicodedata.normalize("NFKC", s)
     for old, new in ACCENT_MAPPING.items():
         source = source.replace(old, new)
@@ -78,7 +79,7 @@ def remove_accent_if_only_one_syllable(s: str):
     if " " in s:
         words = s.replace("\xa0", " ").split(" ")
 
-        fixed_words = []
+        fixed_words: List[str] = []
         for word in words:
             fixed_words.append(remove_accent_if_only_one_syllable(word))
         return " ".join(fixed_words)
@@ -155,7 +156,7 @@ def fix_two_accent_marks(word: str) -> str:
 
     if " " in word:
         words = word.split(" ")
-        fixed_words = []
+        fixed_words: List[str] = []
         for word in words:
             fixed_words.append(fix_two_accent_marks(word))
         return " ".join(fixed_words)
